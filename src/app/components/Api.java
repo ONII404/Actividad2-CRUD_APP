@@ -3,7 +3,6 @@ package app.components;
 import java.sql.ResultSet;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 /**
  *
@@ -20,13 +19,20 @@ public class Api {
      * @return Retorna un vector con los datos del registro requerido
      */
     public String[] search(int nCtrl) {
-        SQLString = "SELECT * FROM Estudiante WHERE codeEst='" + nCtrl + "';";
+//        SQLString = "SELECT * FROM Estudiante WHERE codeEst='" + nCtrl + "';";
+        SQLString = "SELECT * FROM Estudiante WHERE codeEst=?";
         cn = new Conexion();
         String reg[] = new String[6];
+        PreparedStatement pStmt = null;
 
         try {
             cn.open();
-            ResultSet rs = cn.getConnection().createStatement().executeQuery(SQLString);
+            pStmt = cn.getConnection().prepareStatement(SQLString);
+            pStmt.setInt(1, nCtrl);
+            ResultSet rs = pStmt.executeQuery();
+            
+            
+//            ResultSet rs = cn.getConnection().createStatement().executeQuery(SQLString);
 
             if (rs.next()) {
                 reg[0] = rs.getString("nombre");
